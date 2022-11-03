@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('../routes/authentication');
+const profilepic = require('../routes/profilepic');
 const fs = require('firebase-admin');
 const {initializeApp} = require("firebase/app");
 
@@ -37,4 +38,5 @@ const app = initializeApp(firebaseConfig);
 module.exports = function(app){
     app.use(express.json());
     app.use('/api/auth', auth);
+    app.use('/api/upload', profilepic);
 }
