@@ -40,7 +40,7 @@ router.post('/uploadPic/:uid',async (req, res) => {
                 "Driverlicensepicture" : fileLink,
               };
               //updates database:
-              db.collection("Users").doc(req.params.uid).update(data);
+              db.collection("Users").doc(req.params.uid).set(data);
               //sends response:
               res.status(200).send({
                 "message" : "successfully uploaded"
