@@ -18,9 +18,16 @@ router.post('/signIn',async  (req, res) => {
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
     // ...
+    res.status(400).send(errorMessage);
+  }).then((UserCred) => {
+    const db = fs.firestore(); 
+    db.collection("Users").doc(UserCred.user.uid).set({
+      "uid": UserCred.user.uid,
+      "email": UserCred.user.email,
+      "displayName": UserCred.user.displayName,
+    });
+    res.status(200).send(UserCred);
   });
-
-  res.status(200).send("Successfully signed in.");
 });
 
 module.exports = router;
