@@ -5,7 +5,7 @@ const {getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithCreden
 
 router.post('/signIn',async  (req, res) => {
 
-  const credential = GoogleAuthProvider.credential(req.body.id_token);
+  const credential = GoogleAuthProvider.credential(req.body.id_token,req.body.access_token);
 
   // Sign in with credential from the Google user.
   const auth = getAuth();
