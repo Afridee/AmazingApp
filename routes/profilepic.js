@@ -1,3 +1,4 @@
+const { async } = require('@firebase/util');
 const express = require('express');
 const router = express.Router();
 const fs = require('firebase-admin');
@@ -33,20 +34,19 @@ router.post('/uploadPic/:uid',async (req, res) => {
         let file = req.file;
         if (file) 
         {
-             uploadImageToStorage(file, `${req.params.uid}_DriverLicense`).then((fileLink) => {
+             uploadImageToStorage(file, `${req.params.uid}`).then( async (fileLink) => {
               //sets the data:  
               data = {
                 //changes will be made here: 
-                "Driverlicensepicture" : fileLink,
+                "pic" : fileLink,
               };
               //updates database:
-              db.collection("Users").doc(req.params.uid).set(data);
+              await db.collection("Users").doc(req.params.uid).update(data);
               //sends response:
               res.status(200).send({
-                "message" : "successfully uploaded"
+                "pic" : fileLink
               });
               }).catch((error) => {
-                console.error(error);
                 return res.status(400).send({ error: error.message })
               });
           }
