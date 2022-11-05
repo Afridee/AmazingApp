@@ -19,14 +19,28 @@ router.post('/signIn',async  (req, res) => {
     const credential = GoogleAuthProvider.credentialFromError(error);
     // ...
     res.status(400).send(errorMessage);
-  }).then((UserCred) => {
-    const db = fs.firestore(); 
-    db.collection("Users").doc(UserCred.user.uid).set({
-      "uid": UserCred.user.uid,
-      "email": UserCred.user.email,
-      "displayName": UserCred.user.displayName,
-    });
-    res.status(200).send(UserCred);
+  }).then(async (UserCred) => {
+     if(UserCred!=null){
+      const db = fs.firestore(); 
+      await db.collection("Users").doc(UserCred.user.uid).get().then(async user => {
+        if(user.exists){
+         res.status(200).send(user.data());
+        }else{
+          await db.collection("Users").doc(UserCred.user.uid).set({
+            "uid": UserCred.user.uid,
+            "email": UserCred.user.email,
+            "displayName": UserCred.user.displayName,
+            "pic": ""
+          });
+          res.status(200).send({
+            "uid": UserCred.user.uid,
+            "email": UserCred.user.email,
+            "displayName": UserCred.user.displayName,
+            "pic": ""
+          });
+        }
+     });
+     }
   });
 });
 
